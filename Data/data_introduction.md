@@ -7,20 +7,22 @@ https://ieeexplore.ieee.org/document/8963673
 
 It contains six datasets. Each one contains diagrams and labels of trajectories sharing the same pair of origin and destination.
 
-Trajectories are labeled in 5 categories.
+Trajectories are labeled in 5 categories:
 
-0 - global detour (GD)
+- 0 - global detour (GD)
 
-1 - local detour (LD)
+- 1 - local detour (LD)
 
-2 - normal trajectory (NT)
+- 2 - normal trajectory (NT)
 
-3 - local shortcut (LS)
+- 3 - local shortcut (LS)
 
-4 - global shortcut (GS)
+- 4 - global shortcut (GS)
 
 
 Each subfolder './pic' contains trajectory diagrams. Each diagram is transformed from original grid sequence of trajectory, which can be found in X_Label.csv.
+
 X_Label.csv contains the label and index of trajectories from the same pair of origin and destination.
+
 X_TrajectoryGrid.csv contains the index and grid sequence of trajectories.
 (X=1,2,3,4,5,6)
