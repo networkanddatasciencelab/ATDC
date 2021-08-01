@@ -20,7 +20,8 @@ Trajectories are labeled in 5 categories:
 - 4 - global shortcut (GS)
 
 
-Each subfolder './pic' contains trajectory diagrams. Each diagram is transformed from original grid sequence of trajectory, which can be found in X_Label.csv.
+
+Each subfolder 'pic' contains trajectory diagrams. Each diagram is transformed from original grid sequence of trajectory, which can be found in X_Label.csv.
 
 X_Label.csv contains the label and index of trajectories from the same pair of origin and destination.
 
