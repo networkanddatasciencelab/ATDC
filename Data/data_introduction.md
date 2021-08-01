@@ -23,7 +23,8 @@ Trajectories are labeled in 5 categories:
 
 Each subfolder 'pic' contains trajectory diagrams. Each diagram is transformed from original grid sequence of trajectory, which can be found in X_Label.csv.
 
-X_Label.csv contains the label and index of trajectories from the same pair of origin and destination.
+'X_Label.csv' contains the label and index of trajectories from the same pair of origin and destination.
 
-X_TrajectoryGrid.csv contains the index and grid sequence of trajectories.
+'X_TrajectoryGrid.csv' contains the index and grid sequence of trajectories.
+
 (X=1,2,3,4,5,6)
