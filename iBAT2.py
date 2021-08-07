@@ -1,6 +1,6 @@
 """
-@javy wang
-improved algorithm-iBAT2
+@Jingwei Wang
+Improved algorithm-iBAT2
 """
 
 import pandas as pd
@@ -13,8 +13,10 @@ from sklearn import metrics
 
 def iBAT2(input_path, output_path, at_ratio, true_file):
     """
-    :param input_path:
-    :param output_path:
+    :param input_path: the input path of a dataset.
+    :param output_path: the output path of results.
+    :param at_ratio: the ratio of anomalous trajectories in this dataset.
+    :param true_file: the file contains the true label of anomalous trajectories.
     :return: 
     """
     grid_file = input_path + '.csv'  
@@ -123,7 +125,7 @@ def iBAT2(input_path, output_path, at_ratio, true_file):
     at_all_df = iso_df.head(num_all_at) 
     at04_df = at_all_df.head(num_at04) 
     at13_df = at_all_df.tail(num_at13)  
-    print("04类异常轨迹和13类异常轨迹的交集")
+    # the intersection of global anomalous trajectories (0: GD and 4:GS) and local anomalous trajectories (1: LD and 3: LS)
     print(pd.merge(at04_df, at13_df, on=['index']))
 
     at04_df.sort_values(by=['length'], ascending=False, inplace=True) 
