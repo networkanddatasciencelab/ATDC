@@ -19,11 +19,11 @@ def ATDC(path_dict, theta, phi, kn):
     :return: res_f1: the f1-score of ATDC
     """
 
-    grid_file = path_dict['input_path'] + '.csv'  # laod trajectories
+    grid_file = path_dict['input_file']  # laod trajectories
     print(grid_file)
-    grid_df = pd.read_csv(grid_file)    # all trajectories between a pair of source and distination
+    grid_df = pd.read_csv(grid_file)     # all trajectories between a pair of source and distination
 
-    true_file = path_dict['true_file']  # load the label of trajectories
+    true_file = path_dict['true_file']   # load the label of trajectories
     true_df = pd.read_csv(true_file, )  
     true_df = true_df.loc[:, ['index', 'TRUE']]
 
@@ -31,6 +31,7 @@ def ATDC(path_dict, theta, phi, kn):
     f = lambda x: df2dict.update({x.traj_index: x.grid_list})  
     grid_df.apply(f, axis=1)  
 
+    # get the grid sequence of each augmented trajectory
     cell_dict = {}
     for k, v in df2dict.items():
         raw_list = v
@@ -46,6 +47,7 @@ def ATDC(path_dict, theta, phi, kn):
                 new_list.append(int(raw_list[i])) 
             cell_dict[k] = new_list
 
+    # a dataframe to save results
     iso_df = pd.DataFrame(columns=('index', 'diff', 'inter', 'ratio', 'pred'))  
     start_time = time.time()  
 
@@ -99,10 +101,10 @@ def ATDC(path_dict, theta, phi, kn):
 
     iso_df1 = pd.merge(iso_df, true_df, on='index')
 
-    save_file1 = path_dict['output_path'] + '_ATP1.csv'  
+    save_file1 = path_dict['output_path'] + '_ATDC1.csv'    # save the result of the first phase of ATDC
     iso_df1.to_csv(save_file1, sep=',', index=False, columns=['index', 'diff', 'inter', 'ratio', 'pred', 'TRUE'])
 
-    title1 = path_dict['title'] + '_ATP1.png'  
+    title1 = path_dict['title'] + '_ATDC1.png'  
     savefig_path1 = path_dict['savefig_path'] + title1  
 
     res_dict1 = calculate_prec(iso_df1, title1, savefig_path1)
@@ -146,7 +148,7 @@ def ATDC(path_dict, theta, phi, kn):
             else:
                 ratio = round(diff_mean / inter_mean, 4)
 
-            # 轨迹类别判断
+            # trajectory classification 
             if ratio > theta[0]:
                 pred = 0
             elif (ratio > theta[1]) & (ratio <= theta[0]):
@@ -171,14 +173,14 @@ def ATDC(path_dict, theta, phi, kn):
 
     iso_df4 = pd.merge(iso_df3, true_df, on='index')
 
-    save_file2 = path_dict['output_path'] + '_ATP2.csv' 
+    save_file2 = path_dict['output_path'] + '_ATDC2.csv'     # save the result of the second phase of ATDC
     iso_df4.to_csv(save_file2, sep=',', index=False, columns=['index', 'diff', 'inter', 'ratio', 'pred', 'TRUE'])
 
     all_cost_time = end_time2 - start_time  
     print(all_cost_time)  
 
     # return the f1-score of second round
-    title2 = path_dict['title'] + '_ATP2.png' 
+    title2 = path_dict['title'] + '_ATDC2.png' 
     savefig_path2 = path_dict['savefig_path'] + title2 
 
     res_dict2 = calculate_prec(iso_df4, title2, savefig_path2)
@@ -213,38 +215,30 @@ def calculate_prec(co_df, title, savefig_path):
     # plt.title(title)
     # plt.savefig(savefig_path, format='png')
     # plt.show()
-
     return results
 
 
 def main():
-    data_path = {
-        'data1': 'D:\\ftdd\\data\\ATDC\\figs\\',
-        'data2': 'D:\\ftdd\\data\\ATDC\\Trajectory\\',
-        'data3': 'D:\\ftdd\\data\\ATDC\\Label\\',
-        'data4': 'D:\\ftdd\\data\\ATDC\\results\\',
-    }
-
+    # please modify the data path !!
+    data_path = 'D:/ATDC/'
+    # hyper parameters
     theta = [0.5, 0.10, -0.11, -0.5]
     phi = [-0.05, 0.05]
     kn = 10
-
-    data_set = ['3100-4421', '3099-4421', '3159-4421', '3159-4481', '4421-3099', '4421-3159']
-    # grid_set = ['500', '400', '300', '200', '100'] 
+    # do experiments and save results 
     f1 = pd.DataFrame(columns=('class 0', 'class 1', 'class 3', 'class 4', 'micro avg', 'macro avg', 'weighted avg','all time'))
-    for i in range(1, 7):
-        true_file = data_path['data3'] + str(i) + '_' + '300_' + data_set[i - 1] + '_TRUE.csv'
-        input_path = data_path['data2'] + 'index_grid300_' + data_set[i - 1]  
-        output_path = data_path['data4'] + str(i) + '_' + '300' + '_' + data_set[i - 1]
-        title = str(i) + '_' + '300' + '_' + data_set[i - 1]
-        savefig_path = data_path['data1']
-        path_dict = {'input_path': input_path, 'output_path': output_path, 'true_file': true_file, 'title': title, 'savefig_path': savefig_path}
-        res_f1 = ATDC2(path_dict, theta, phi, kn)
-        f1_name = '300' + '_f1'
+    for i in range(1, 7):   # this the index of SD pairs
+        true_file = data_path + 'data' +  str(i) + '/' + str(i) + '_Label.csv'
+        input_file = data_path + 'data' +  str(i) + '/' + str(i) + '_TrajectoryGrid.csv'
+        output_path = data_path + 'result' +  str(i) + '/'
+        title = str(i) + '_dataset'
+        savefig_path = data_path + 'fig' +  str(i) + '/'
+        path_dict = {'input_file': input_file, 'output_path': output_path, 'true_file': true_file, 'title': title, 'savefig_path': savefig_path}
+        res_f1 = ATDC(path_dict, theta, phi, kn)  # main function
+        f1_name = str(i) + '_f1'
         res_f1.index = pd.Series([f1_name])
         f1 = pd.concat([f1, res_f1])
-
-    save_path = data_path['data4'] + 'ATDC_f1.csv'
+    save_path = data_path['data3'] + 'ATDC_f1.csv'
     f1.to_csv(save_path, sep=',', columns=['class 0', 'class 1', 'class 3', 'class 4', 'micro avg', 'macro avg', 'weighted avg','all time'])
 
 
